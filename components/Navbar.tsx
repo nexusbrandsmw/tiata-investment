@@ -113,11 +113,11 @@ export default function Navbar() {
 
               <li>
                 <Link
-                  href="/partner"
+                  href="/contact"
                   onClick={() => setOpen(false)}
                   className="bg-brand-gold text-white px-4 py-2 rounded-lg inline-block"
                 >
-                  Become a Partner
+                  Order in Bulk
                 </Link>
               </li>
 
