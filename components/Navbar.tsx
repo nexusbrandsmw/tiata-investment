@@ -118,6 +118,7 @@ export default function Navbar() {
                   className="bg-brand-gold text-white px-4 py-2 rounded-full inline-block"
                 >
                   Order in Bulk
+                  <span className="transition-transform group-hover:translate-x-1"> → </span>
                 </Link>
               </li>
 

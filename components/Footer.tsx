@@ -97,7 +97,7 @@ export default function Footer() {
               <div className="flex gap-3">
                 <MapPin className="text-brand-gold mt-1" size={20} />
                 <span className="text-white/80">
-                  Area 47/2, Lilongwe, Malawi
+                  Area 25 Lilongwe, Malawi
                 </span>
               </div>
 
