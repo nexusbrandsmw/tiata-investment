@@ -1,0 +1,39 @@
+
+> tiata-investment@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.2.9 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 7.4s
+  Running TypeScript ...
+  Finished TypeScript in 5.9s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/12) ...
+  Generating static pages using 3 workers (3/12) 
+  Generating static pages using 3 workers (6/12) 
+  Generating static pages using 3 workers (9/12) 
+Γ£ô Generating static pages using 3 workers (12/12) in 672ms
+  Finalizing page optimization ...
+
+Route (app)
+Γöî ╞Æ /
+Γö£ Γùï /_not-found
+Γö£ Γùï /about
+Γö£ ╞Æ /api/contact
+Γö£ ╞Æ /blog
+Γö£ ╞Æ /blog/[slug]
+Γö£ Γùï /contact
+Γö£ Γùï /products
+Γöö ΓùÅ /products/[slug]
+  Γö£ /products/mango
+  Γö£ /products/bwemba
+  Γö£ /products/malambe
+  Γöö [+2 more paths]
+
+
+Γùï  (Static)   prerendered as static content
+ΓùÅ  (SSG)      prerendered as static HTML (uses generateStaticParams)
+╞Æ  (Dynamic)  server-rendered on demand
+
