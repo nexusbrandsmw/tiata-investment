@@ -3,11 +3,11 @@ const API_URL = process.env.WORDPRESS_API_URL!;
 // ── Core fetcher ────────────────────────────────────────────
 async function fetchAPI(query: string, variables = {}) {
   const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query, variables }),
-    next: { revalidate: 60 }, // ISR — revalidates every 60 seconds
-  });
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ query, variables }),
+  cache: "no-store",
+});
 
   const json = await res.json();
   if (json.errors) throw new Error(json.errors[0].message);
