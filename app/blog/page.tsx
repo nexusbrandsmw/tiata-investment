@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { getAllPosts } from "@/lib/wordpress";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export const revalidate = 60; // ISR — refresh every 60 seconds
 
 export default async function BlogPage() {
