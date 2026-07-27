@@ -7,24 +7,39 @@ import { FaWhatsapp } from "react-icons/fa";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 export default function ContactPage() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(form);
+    setStatus("sending");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (res.ok) {
+        setStatus("success");
+        setForm({ name: "", email: "", message: "" });
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
     <>
       <Navbar />
+
       {/* HEADER */}
       <PageHeader
         title="Let's Start the Conversation"
@@ -78,7 +93,7 @@ export default function ContactPage() {
           {/* RIGHT FORM */}
           <form
             onSubmit={handleSubmit}
-            className="bg-secondary p-8 rounded-2xl border border-brand-brown/30"
+            className="bg-white p-8 rounded-2xl border border-brand-brown/30"
           >
             <div className="space-y-5">
 
@@ -92,6 +107,7 @@ export default function ContactPage() {
                 placeholder="Your Name"
                 value={form.name}
                 onChange={handleChange}
+                required
                 className="w-full p-3 rounded-xl border text-brand-brown border-brand-brown/50 focus:outline-none focus:border-brand-green"
               />
 
@@ -101,6 +117,7 @@ export default function ContactPage() {
                 placeholder="Your Email"
                 value={form.email}
                 onChange={handleChange}
+                required
                 className="w-full p-3 rounded-xl border text-brand-brown border-brand-brown/50 focus:outline-none focus:border-brand-green"
               />
 
@@ -109,16 +126,32 @@ export default function ContactPage() {
                 placeholder="Your Message"
                 value={form.message}
                 onChange={handleChange}
+                required
                 rows={6}
                 className="w-full p-3 rounded-xl border text-brand-brown border-brand-brown/50 focus:outline-none focus:border-brand-green"
               />
 
               <button
                 type="submit"
-                className="w-full bg-brand-green text-white py-3 rounded-full font-medium hover:opacity-90 transition"
+                disabled={status === "sending"}
+                className="w-full bg-brand-green text-white py-3 rounded-full font-medium hover:opacity-90 transition disabled:opacity-60"
               >
-                Send Message
+                {status === "sending" ? "Sending..." : "Send Message"}
               </button>
+
+              {/* SUCCESS MESSAGE */}
+              {status === "success" && (
+                <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm">
+                  ✓ Message sent successfully! We will get back to you soon.
+                </div>
+              )}
+
+              {/* ERROR MESSAGE */}
+              {status === "error" && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                  ✗ Failed to send message. Please try WhatsApp or email us directly.
+                </div>
+              )}
 
             </div>
           </form>

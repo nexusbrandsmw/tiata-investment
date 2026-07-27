@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaCheck, FaStar, FaLeaf, FaSeedling, FaTruck, FaAward, FaShieldAlt, FaHeart, } from "react-icons/fa";
 import { products } from "@/data/products";
+import { getAllPosts } from "@/lib/wordpress";
+
+export const revalidate = 60;
 
 /* ─── DATA ─────────────────────────────────────────────────── */
 
@@ -39,14 +42,22 @@ const testimonials = [
   },
 ];
 
-
 const productNames = products.map((product) =>
   product.name.toUpperCase()
 );
 
 /* ─── PAGE ──────────────────────────────────────────────────── */
 
-export default function Home() {
+export default async function Home() {
+  // Fetch latest 3 posts from WordPress — falls back to empty array if API is unreachable
+  let latestPosts: any[] = [];
+  try {
+    const allPosts = await getAllPosts();
+    latestPosts = allPosts.slice(0, 3);
+  } catch (e) {
+    latestPosts = [];
+  }
+
   return (
     <>
       <Navbar />
@@ -96,7 +107,6 @@ export default function Home() {
 
               {/* product shot */}
               <div className="relative">
-
                 <div className="relative w-full aspect-square">
                   <Image src="/hero-bottle.png" alt="Bottle of Tiata juice" fill className="object-contain drop-shadow-2xl" priority />
                 </div>
@@ -120,6 +130,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── IMAGE MARQUEE ─────────────────────────────────────── */}
       <section className="bg-white py-10 overflow-hidden">
         <div className="flex w-max animate-marquee">
           {[...products, ...products].map((product, i) => (
@@ -150,195 +161,54 @@ export default function Home() {
         </div>
       </section>
 
-          {/* ───────────────────── OUR PRODUCT RANGE ───────────────────── */}
-          <section className="py-20 lg:py-28 bg-white">
-            <div className="max-w-7xl mx-auto px-6">
-
-              {/* Heading */}
-              <div className="max-w-3xl mx-auto text-center">
-                <span className="inline-flex items-center rounded-full bg-brand-gold/10 px-4 py-2 text-sm font-medium text-brand-gold">
-                  Our Product Range
-                </span>
-
-                <h2 className="mt-6 text-4xl md:text-5xl lg:text-6xl font-display font-semibold text-brand-brown leading-tight">
-                  Proudly Made
-                  <br />
-                  <span className="text-brand-gold">In Malawi</span>
-                </h2>
-
-                <p className="mt-6 text-brand-brown/70 text-base md:text-lg leading-relaxed">
-                  Explore our growing range of refreshing fruit juices and quality kitchen
-                  essentials made for every home.
-                </p>
-              </div>
-
-              {/* Products */}
-              <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-
-                {products.map((product) => (
-                  <Link
-                    key={product.slug}
-                    href={`/products/${product.slug}`}
-                    className="group rounded-3xl border border-brand-brown/10 p-8 transition-all duration-300 hover:border-brand-gold hover:shadow-lg hover:-translate-y-2"
-                  >
-
-                    <div className="relative h-72 w-full">
-                      <Image
-                        src={product.image}
-                        alt={product.name}
-                        fill
-                        className="object-contain transition-transform duration-500 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <span
-                      className={`mt-6 inline-flex rounded-full px-3 py-1 text-xs font-body font-medium uppercase tracking-[0.12em] ${
-                        product.category === "Juices"
-                          ? "bg-brand-green/10 text-brand-green"
-                          : "bg-brand-brown/10 text-brand-brown"
-                      }`}
-                    >
-                      {product.category}
-                    </span>
-
-                    <h3 className="mt-4 text-2xl font-display font-semibold text-brand-brown">
-                      {product.name}
-                    </h3>
-
-                    <p className="mt-3 text-brand-brown/70 leading-relaxed">
-                      {product.description}
-                    </p>
-
-                  </Link>
-                ))}
-
-              </div>
-
-            </div>
-          </section>
-
-      {/* ───────────────────── WHY CHOOSE TIATA ───────────────────── */}
-      <section className="bg-brand-green py-20 lg:py-28">
+      {/* ── OUR PRODUCT RANGE ─────────────────────────────────── */}
+      <section className="py-20 lg:py-28 bg-white">
         <div className="max-w-7xl mx-auto px-6">
 
-          <div className="grid lg:grid-cols-5 gap-14 items-center">
+          <div className="max-w-3xl mx-auto text-center">
+            <span className="inline-flex items-center rounded-full bg-brand-gold/10 px-4 py-2 text-sm font-medium text-brand-gold">
+              Our Product Range
+            </span>
 
-            {/* LEFT SIDE */}
-            <div className="lg:col-span-2 relative">
+            <h2 className="mt-6 text-4xl md:text-5xl lg:text-6xl font-display font-semibold text-brand-brown leading-tight">
+              Proudly Made
+              <br />
+              <span className="text-brand-gold">In Malawi</span>
+            </h2>
 
-              <div className="relative aspect-[4/5] rounded-[2rem] overflow-hidden">
-                <Image
-                  src="/why-us.png"
-                  alt="Family enjoying Tiata products"
-                  fill
-                  className="object-cover"
-                />
-              </div>
+            <p className="mt-6 text-brand-brown/70 text-base md:text-lg leading-relaxed">
+              Explore our growing range of refreshing fruit juices and quality kitchen
+              essentials made for every home.
+            </p>
+          </div>
 
-              {/* Floating Card */}
-              <div className="absolute -bottom-5 -left-4 bg-white rounded-3xl shadow-xl p-5 flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center">
-                  <FaAward className="text-2xl text-brand-green" />
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {products.map((product) => (
+              <Link
+                key={product.slug}
+                href={`/products/${product.slug}`}
+                className="group rounded-3xl border border-brand-brown/10 p-8 transition-all duration-300 hover:border-brand-gold hover:shadow-lg hover:-translate-y-2"
+              >
+                <div className="relative h-72 w-full">
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-contain transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
-              </div>
-
-              {/* Floating Card */}
-              <div className="absolute top-8 -right-6 bg-white rounded-3xl shadow-xl p-5 flex items-center gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-brand-gold/10 flex items-center justify-center">
-                  <FaShieldAlt className="text-2xl text-brand-gold" />
-                </div>
-              </div>
-
-            </div>
-
-            {/* RIGHT SIDE */}
-            <div className="lg:col-span-3">
-
-              <span className="inline-flex rounded-full bg-brand-gold px-4 py-2 text-sm font-medium text-white">
-                Why Choose Tiata
-              </span>
-
-              <h2 className="mt-6 text-4xl md:text-5xl font-display font-semibold text-white leading-tight">
-                Quality Products
-                <br />
-                You Can Trust
-              </h2>
-
-              <p className="mt-6 text-white/80 text-lg leading-relaxed max-w-2xl">
-                Every Tiata product is crafted to deliver great taste, consistent
-                quality and everyday convenience for families and businesses alike.
-              </p>
-
-              <div className="mt-12 grid sm:grid-cols-2 gap-8">
-
-                <div className="rounded-3xl bg-white/10 border border-white/15 p-6 backdrop-blur-sm">
-                  <h3 className="text-xl font-display font-semibold text-white">
-                    Naturally Delicious
-                  </h3>
-
-                  <p className="mt-3 text-white/80 leading-relaxed">
-                    Rich flavours made from quality ingredients for an authentic taste.
-                  </p>
-                </div>
-
-                <div className="rounded-3xl bg-white/10 border border-white/15 p-6 backdrop-blur-sm">
-                  <h3 className="text-xl font-display font-semibold text-white">
-                    Everyday Convenience
-                  </h3>
-
-                  <p className="mt-3 text-white/80 leading-relaxed">
-                    Ready-to-use products that make cooking and serving easier.
-                  </p>
-                </div>
-
-                <div className="rounded-3xl bg-white/10 border border-white/15 p-6 backdrop-blur-sm">
-                  <h3 className="text-xl font-display font-semibold text-white">
-                    Consistent Quality
-                  </h3>
-
-                  <p className="mt-3 text-white/80 leading-relaxed">
-                    Produced with care to ensure every pack meets high quality standards.
-                  </p>
-                </div>
-
-                <div className="rounded-3xl bg-white/10 border border-white/15 p-6 backdrop-blur-sm">
-                  <h3 className="text-xl font-display font-semibold text-white">
-                    Made for Every Home
-                  </h3>
-
-                  <p className="mt-3 text-white/80 leading-relaxed">
-                    A growing range of products enjoyed by households, retailers and restaurants.
-                  </p>
-                </div>
-
-              </div>
-
-            </div>
-
+              </Link>
+            ))}
           </div>
 
         </div>
       </section>
 
-      {/* ── STATS BAR ─────────────────────────────────────────── */}
-      <section className="bg-brand-gold py-16">
-        <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((s) => (
-            <div key={s.label} className="text-center text-white">
-              <p className="text-4xl md:text-5xl font-display font-semibold">{s.value}</p>
-              <p className="mt-2 text-sm uppercase tracking-widest text-white/70">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ───────────────────── FROM OUR JOURNAL ───────────────────── */}
+      {/* ── FROM OUR JOURNAL — WordPress posts ────────────────── */}
       <section className="bg-brand-cream py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6">
 
-          {/* Heading */}
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-
             <div className="max-w-2xl">
               <span className="inline-flex rounded-full bg-brand-green/10 px-4 py-2 text-sm font-medium text-brand-green">
                 Latest Stories
@@ -362,126 +232,84 @@ export default function Home() {
               View All Articles
               <span>→</span>
             </Link>
-
           </div>
 
-          {/* Blog Grid */}
           <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-
-            {/* Article 1 */}
-            <article className="group overflow-hidden rounded-[2rem] border border-brand-brown/10 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
-                  src="/blog-mango.png"
-                  alt="Fresh mango juice"
-                  fill
-                  className="object-cover transition duration-700 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="p-8">
-
-                <span className="inline-flex rounded-full bg-brand-green/10 px-3 py-1 text-xs font-medium text-brand-green">
-                  Recipes
-                </span>
-
-                <h3 className="mt-5 text-2xl font-display font-semibold text-brand-brown leading-snug">
-                  5 Refreshing Ways to Enjoy Tiata Mango Juice
-                </h3>
-
-                <p className="mt-4 text-brand-brown/70 leading-relaxed">
-                  From breakfast smoothies to tropical mocktails, discover easy ways
-                  to enjoy your favourite mango juice.
-                </p>
-
+            {latestPosts.length > 0 ? (
+              latestPosts.map((post) => (
                 <Link
-                  href="/blog/mango-recipes"
-                  className="mt-6 inline-flex items-center gap-2 font-medium text-brand-gold hover:gap-3 transition-all"
+                  href={`/blog/${post.slug}`}
+                  key={post.slug}
+                  className="group block overflow-hidden rounded-[2rem] border border-brand-brown/10 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
                 >
-                  Read Article →
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <Image
+                      src={post.image}
+                      alt={post.title}
+                      fill
+                      className="object-cover transition duration-700 group-hover:scale-105"
+                    />
+                  </div>
+
+                  <div className="p-8">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="inline-flex rounded-full bg-brand-green/10 px-3 py-1 text-xs font-medium text-brand-green">
+                        {post.category}
+                      </span>
+                      <span className="text-xs text-brand-brown/50">{post.date}</span>
+                    </div>
+
+                    <h3 className="mt-2 text-2xl font-display font-semibold text-brand-brown leading-snug">
+                      {post.title}
+                    </h3>
+
+                    <p className="mt-4 text-brand-brown/70 leading-relaxed line-clamp-2">
+                      {post.excerpt}
+                    </p>
+
+                  </div>
                 </Link>
+              ))
+            ) : (
+              // Fallback static cards if WordPress is unreachable
+              <>
+                <article className="group overflow-hidden rounded-[2rem] border border-brand-brown/10 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <Image src="/blog-mango.png" alt="Fresh mango juice" fill className="object-cover transition duration-700 group-hover:scale-105" />
+                  </div>
+                  <div className="p-8">
+                    <span className="inline-flex rounded-full bg-brand-green/10 px-3 py-1 text-xs font-medium text-brand-green">Recipes</span>
+                    <h3 className="mt-5 text-2xl font-display font-semibold text-brand-brown leading-snug">5 Refreshing Ways to Enjoy Tiata Mango Juice</h3>
+                    <p className="mt-4 text-brand-brown/70 leading-relaxed">From breakfast smoothies to tropical mocktails, discover easy ways to enjoy your favourite mango juice.</p>
+                    <Link href="/blog" className="mt-6 inline-flex items-center gap-2 font-medium text-brand-gold hover:gap-3 transition-all">Read Article →</Link>
+                  </div>
+                </article>
 
-              </div>
+                <article className="group overflow-hidden rounded-[2rem] border border-brand-brown/10 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <Image src="/blog-onion.png" alt="Cooking with onion flakes" fill className="object-cover transition duration-700 group-hover:scale-105" />
+                  </div>
+                  <div className="p-8">
+                    <span className="inline-flex rounded-full bg-brand-brown/10 px-3 py-1 text-xs font-medium text-brand-brown">Kitchen Tips</span>
+                    <h3 className="mt-5 text-2xl font-display font-semibold text-brand-brown leading-snug">Why Onion Flakes Deserve a Place in Every Kitchen</h3>
+                    <p className="mt-4 text-brand-brown/70 leading-relaxed">Save preparation time while adding rich onion flavour to soups, sauces and everyday meals.</p>
+                    <Link href="/blog" className="mt-6 inline-flex items-center gap-2 font-medium text-brand-gold hover:gap-3 transition-all">Read Article →</Link>
+                  </div>
+                </article>
 
-            </article>
-
-            {/* Article 2 */}
-            <article className="group overflow-hidden rounded-[2rem] border border-brand-brown/10 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
-                  src="/blog-onion.png"
-                  alt="Cooking with onion flakes"
-                  fill
-                  className="object-cover transition duration-700 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="p-8">
-
-                <span className="inline-flex rounded-full bg-brand-brown/10 px-3 py-1 text-xs font-medium text-brand-brown">
-                  Kitchen Tips
-                </span>
-
-                <h3 className="mt-5 text-2xl font-display font-semibold text-brand-brown leading-snug">
-                  Why Onion Flakes Deserve a Place in Every Kitchen
-                </h3>
-
-                <p className="mt-4 text-brand-brown/70 leading-relaxed">
-                  Save preparation time while adding rich onion flavour to soups,
-                  sauces and everyday meals.
-                </p>
-
-                <Link
-                  href="/blog/onion-flakes"
-                  className="mt-6 inline-flex items-center gap-2 font-medium text-brand-gold hover:gap-3 transition-all"
-                >
-                  Read Article →
-                </Link>
-
-              </div>
-
-            </article>
-
-            {/* Article 3 */}
-            <article className="group overflow-hidden rounded-[2rem] border border-brand-brown/10 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
-                  src="/blog-local.png"
-                  alt="Made in Malawi"
-                  fill
-                  className="object-cover transition duration-700 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="p-8">
-
-                <span className="inline-flex rounded-full bg-brand-gold/10 px-3 py-1 text-xs font-medium text-brand-gold">
-                  Brand Story
-                </span>
-
-                <h3 className="mt-5 text-2xl font-display font-semibold text-brand-brown leading-snug">
-                  Proudly Made in Malawi, Crafted for Every Home
-                </h3>
-
-                <p className="mt-4 text-brand-brown/70 leading-relaxed">
-                  Learn how Tiata combines quality ingredients and local expertise to
-                  create products families can trust.
-                </p>
-
-                <Link
-                  href="/blog/made-in-malawi"
-                  className="mt-6 inline-flex items-center gap-2 font-medium text-brand-gold hover:gap-3 transition-all"
-                >
-                  Read Article →
-                </Link>
-
-              </div>
-
-            </article>
-
+                <article className="group overflow-hidden rounded-[2rem] border border-brand-brown/10 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <Image src="/blog-local.png" alt="Made in Malawi" fill className="object-cover transition duration-700 group-hover:scale-105" />
+                  </div>
+                  <div className="p-8">
+                    <span className="inline-flex rounded-full bg-brand-gold/10 px-3 py-1 text-xs font-medium text-brand-gold">Brand Story</span>
+                    <h3 className="mt-5 text-2xl font-display font-semibold text-brand-brown leading-snug">Proudly Made in Malawi, Crafted for Every Home</h3>
+                    <p className="mt-4 text-brand-brown/70 leading-relaxed">Learn how Tiata combines quality ingredients and local expertise to create products families can trust.</p>
+                    <Link href="/blog" className="mt-6 inline-flex items-center gap-2 font-medium text-brand-gold hover:gap-3 transition-all">Read Article →</Link>
+                  </div>
+                </article>
+              </>
+            )}
           </div>
 
         </div>
@@ -523,19 +351,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ───────────────────── CALL TO ACTION ───────────────────── */}
+      {/* ── CALL TO ACTION ────────────────────────────────────── */}
       <section className="bg-brand-cream py-20 lg:py-28">
         <div className="max-w-6xl mx-auto px-6">
 
           <div className="relative overflow-hidden rounded-[2.5rem] bg-brand-green px-8 py-16 md:px-16 md:py-20 text-center">
 
-            {/* Decorative blobs */}
             <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-brand-gold/15 blur-3xl" />
             <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
 
             <div className="relative max-w-3xl mx-auto">
 
-              <span className="inline-flex items-center rounded-full bg-white/15 px-5 py-2 text-sm font-body font-medium text-white">
+              <span className="inline-flex items-center rounded-full bg-white/15 px-5 py-2 text-sm font-medium text-white">
                 Ready to Experience Tiata?
               </span>
 
@@ -551,23 +378,19 @@ export default function Home() {
                 products you can trust.
               </p>
 
-              {/* Buttons */}
               <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-
                 <Link
                   href="/products"
                   className="inline-flex items-center justify-center rounded-full bg-brand-gold px-8 py-4 text-base font-medium text-white transition hover:scale-105 hover:shadow-lg"
                 >
                   Explore Our Products
                 </Link>
-
                 <Link
                   href="/contact"
                   className="inline-flex items-center justify-center rounded-full border border-white/30 px-8 py-4 text-base font-medium text-white transition hover:bg-white hover:text-brand-green"
                 >
                   Become a Stockist
                 </Link>
-
               </div>
 
             </div>
