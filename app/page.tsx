@@ -6,7 +6,8 @@ import { FaCheck, FaStar, FaLeaf, FaSeedling, FaTruck, FaAward, FaShieldAlt, FaH
 import { products } from "@/data/products";
 import { getAllPosts } from "@/lib/wordpress";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 /* ─── DATA ─────────────────────────────────────────────────── */
 
@@ -18,8 +19,8 @@ const whyReasons = [
 ];
 
 const stats = [
-  { value: "200+",  label: "Partner Farmers"    },
-  { value: "48hrs", label: "Harvest to Bottle"  },
+  { value: "9+",  label: "Partner Farmers"    },
+  { value: "100%", label: "Malawian Sourced"  },
   { value: "5",     label: "Products"           },
   { value: "100%",  label: "Natural"            },
 ];
