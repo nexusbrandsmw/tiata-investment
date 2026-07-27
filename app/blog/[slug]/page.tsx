@@ -5,11 +5,16 @@ import Footer from "@/components/Footer";
 import { getAllPosts, getAllPostSlugs, getPostBySlug } from "@/lib/wordpress";
 
 export const revalidate = 60;
+export const dynamicParams = true;
 
 // Pre-generate all published post slugs at build time
 export async function generateStaticParams() {
-  const slugs = await getAllPostSlugs();
-  return slugs.map((slug) => ({ slug }));
+  try {
+    const slugs = await getAllPostSlugs();
+    return slugs.map((slug) => ({ slug }));
+  } catch {
+    return [];
+  }
 }
 
 export default async function BlogPostPage({
@@ -19,13 +24,22 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params;
 
-  const post = await getPostBySlug(slug);
+  let post;
+  try {
+    post = await getPostBySlug(slug);
+  } catch {
+    notFound();
+  }
 
   if (!post) notFound();
 
-  // Fetch related posts (all posts except current, take first 2)
-  const allPosts = await getAllPosts();
-  const relatedPosts = allPosts.filter((p) => p.slug !== slug).slice(0, 2);
+  let relatedPosts: any[] = [];
+  try {
+    const allPosts = await getAllPosts();
+    relatedPosts = allPosts.filter((p) => p.slug !== slug).slice(0, 2);
+  } catch {
+    relatedPosts = [];
+  }
 
   return (
     <>
