@@ -17,17 +17,13 @@ export default async function BlogPostPage({
 }) {
   const { slug } = await params;
 
-  let post;
-
-  try {
-    post = await getPostBySlug(slug);
-  } catch {
-    notFound();
-  }
+  const post = await getPostBySlug(slug).catch(() => notFound());
 
   if (!post) notFound();
 
-  let relatedPosts: any[] = [];
+  type Post = Awaited<ReturnType<typeof getAllPosts>>[number];
+
+  let relatedPosts: Post[] = [];
 
   try {
     const allPosts = await getAllPosts();
