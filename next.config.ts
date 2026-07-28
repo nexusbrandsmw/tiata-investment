@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "cms.tiatamw.com",
+        hostname: "tiatamw.com",
         pathname: "/**",
       },
     ],
