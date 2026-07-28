@@ -27,7 +27,7 @@ export default async function BlogPostPage({
 
   if (!post) notFound();
 
-  let relatedPosts = [];
+  let relatedPosts: any[] = [];
 
   try {
     const allPosts = await getAllPosts();
