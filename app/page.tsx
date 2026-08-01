@@ -272,44 +272,9 @@ export default async function Home() {
                 </Link>
               ))
             ) : (
-              // Fallback static cards if WordPress is unreachable
-              <>
-                <article className="group overflow-hidden rounded-[2rem] border border-brand-brown/10 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image src="/blog-mango.png" alt="Fresh mango juice" fill className="object-cover transition duration-700 group-hover:scale-105" />
-                  </div>
-                  <div className="p-8">
-                    <span className="inline-flex rounded-full bg-brand-green/10 px-3 py-1 text-xs font-medium text-brand-green">Recipes</span>
-                    <h3 className="mt-5 text-2xl font-display font-semibold text-brand-brown leading-snug">5 Refreshing Ways to Enjoy Tiata Mango Juice</h3>
-                    <p className="mt-4 text-brand-brown/70 leading-relaxed">From breakfast smoothies to tropical mocktails, discover easy ways to enjoy your favourite mango juice.</p>
-                    <Link href="/blog" className="mt-6 inline-flex items-center gap-2 font-medium text-brand-gold hover:gap-3 transition-all">Read Article →</Link>
-                  </div>
-                </article>
-
-                <article className="group overflow-hidden rounded-[2rem] border border-brand-brown/10 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image src="/blog-onion.png" alt="Cooking with onion flakes" fill className="object-cover transition duration-700 group-hover:scale-105" />
-                  </div>
-                  <div className="p-8">
-                    <span className="inline-flex rounded-full bg-brand-brown/10 px-3 py-1 text-xs font-medium text-brand-brown">Kitchen Tips</span>
-                    <h3 className="mt-5 text-2xl font-display font-semibold text-brand-brown leading-snug">Why Onion Flakes Deserve a Place in Every Kitchen</h3>
-                    <p className="mt-4 text-brand-brown/70 leading-relaxed">Save preparation time while adding rich onion flavour to soups, sauces and everyday meals.</p>
-                    <Link href="/blog" className="mt-6 inline-flex items-center gap-2 font-medium text-brand-gold hover:gap-3 transition-all">Read Article →</Link>
-                  </div>
-                </article>
-
-                <article className="group overflow-hidden rounded-[2rem] border border-brand-brown/10 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                  <div className="relative aspect-[4/3] overflow-hidden">
-                    <Image src="/blog-local.png" alt="Made in Malawi" fill className="object-cover transition duration-700 group-hover:scale-105" />
-                  </div>
-                  <div className="p-8">
-                    <span className="inline-flex rounded-full bg-brand-gold/10 px-3 py-1 text-xs font-medium text-brand-gold">Brand Story</span>
-                    <h3 className="mt-5 text-2xl font-display font-semibold text-brand-brown leading-snug">Proudly Made in Malawi, Crafted for Every Home</h3>
-                    <p className="mt-4 text-brand-brown/70 leading-relaxed">Learn how Tiata combines quality ingredients and local expertise to create products families can trust.</p>
-                    <Link href="/blog" className="mt-6 inline-flex items-center gap-2 font-medium text-brand-gold hover:gap-3 transition-all">Read Article →</Link>
-                  </div>
-                </article>
-              </>
+              <p className="col-span-full text-center text-brand-brown/50">
+                No posts published yet. Check back soon.
+              </p>
             )}
           </div>
 
