@@ -1,4 +1,5 @@
 const API_URL = process.env.WORDPRESS_API_URL!;
+const WP_ORIGIN = new URL(API_URL).origin; // e.g. https://cms.tiatamw.com
 
 // ─────────────────────────────────────────────
 // Core GraphQL Fetcher
@@ -72,6 +73,33 @@ function extractFirstImage(content: string): string {
   return match ? match[1] : "/blog-placeholder.jpg";
 }
 
+// Fixes relative image URLs (WordPress sometimes outputs "/wp-content/..."
+// instead of the full domain) and strips inline color/background styles
+// that get pasted in from Word/Google Docs and can make text invisible
+// on a white background.
+function cleanContentHtml(html: string): string {
+  return html
+    // Turn src="/wp-content/..." into src="https://cms.tiatamw.com/wp-content/..."
+    .replace(/(src|href)="\/(?!\/)/g, `$1="${WP_ORIGIN}/`)
+    // Strip color / background-color / background from inline style attributes
+    .replace(/style="([^"]*)"/gi, (_match, styles: string) => {
+      const cleaned = styles
+        .split(";")
+        .filter((rule) => {
+          const prop = rule.split(":")[0]?.trim().toLowerCase();
+          return (
+            prop !== "color" &&
+            prop !== "background" &&
+            prop !== "background-color"
+          );
+        })
+        .join(";")
+        .trim();
+
+      return cleaned ? `style="${cleaned}"` : "";
+    });
+}
+
 function cleanText(text: string) {
   return text
     .replace(/<[^>]+>/g, "")
@@ -119,27 +147,29 @@ export async function getAllPosts(): Promise<WPPost[]> {
     }
   `);
 
-  return data.posts.nodes.map((post: any): WPPost => ({
-    slug: post.slug,
+  return data.posts.nodes.map((post: any): WPPost => {
+    const content = cleanContentHtml(post.content ?? "");
 
-    title: cleanText(post.title),
+    return {
+      slug: post.slug,
 
-    excerpt: cleanText(post.excerpt ?? ""),
+      title: cleanText(post.title),
 
-    date: formatDate(post.date),
+      excerpt: cleanText(post.excerpt ?? ""),
 
-    readTime: estimateReadTime(post.content ?? ""),
+      date: formatDate(post.date),
 
-    author: post.author?.node?.name,
+      readTime: estimateReadTime(content),
 
-    category: post.categories?.nodes?.[0]?.name ?? "General",
+      author: post.author?.node?.name,
 
-    image:
-      post.featuredImage?.node?.sourceUrl ??
-      extractFirstImage(post.content ?? ""),
+      category: post.categories?.nodes?.[0]?.name ?? "General",
 
-    content: post.content ?? "",
-  }));
+      image: post.featuredImage?.node?.sourceUrl ?? extractFirstImage(content),
+
+      content,
+    };
+  });
 }
 
 // ─────────────────────────────────────────────
@@ -186,6 +216,7 @@ export async function getPostBySlug(
   }
 
   const post = data.postBy;
+  const content = cleanContentHtml(post.content ?? "");
 
   return {
     slug: post.slug,
@@ -196,17 +227,15 @@ export async function getPostBySlug(
 
     date: formatDate(post.date),
 
-    readTime: estimateReadTime(post.content ?? ""),
+    readTime: estimateReadTime(content),
 
     author: post.author?.node?.name,
 
     category: post.categories?.nodes?.[0]?.name ?? "General",
 
-    image:
-      post.featuredImage?.node?.sourceUrl ??
-      extractFirstImage(post.content ?? ""),
+    image: post.featuredImage?.node?.sourceUrl ?? extractFirstImage(content),
 
-    content: post.content ?? "",
+    content,
   };
 }
 

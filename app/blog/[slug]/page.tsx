@@ -84,7 +84,7 @@ export default async function BlogPostPage({
                 prose-headings:font-display
                 prose-headings:text-brand-brown
 
-                prose-p:text-brand-brown/75
+                prose-p:text-brand-brown
                 prose-p:leading-8
 
                 prose-strong:text-brand-brown
@@ -93,14 +93,17 @@ export default async function BlogPostPage({
                 prose-a:no-underline
                 hover:prose-a:text-brand-gold
 
-                prose-ul:text-brand-brown/75
-                prose-ol:text-brand-brown/75
+                prose-li:text-brand-brown
+                prose-ul:text-brand-brown
+                prose-ol:text-brand-brown
 
                 prose-img:rounded-3xl
                 prose-img:shadow-lg
 
                 prose-blockquote:border-brand-green
                 prose-blockquote:text-brand-brown/70
+
+                [&_*]:!bg-transparent
               "
               dangerouslySetInnerHTML={{
                 __html: post.content,
@@ -112,48 +115,37 @@ export default async function BlogPostPage({
         {/* Related Posts */}
         {relatedPosts.length > 0 && (
           <section className="bg-brand-cream py-20">
-            <div className="max-w-6xl mx-auto px-6">
+            <div className="max-w-4xl mx-auto px-6">
 
-              <h2 className="text-4xl font-display font-semibold text-brand-brown mb-12">
+              <h2 className="text-3xl font-display font-semibold text-brand-brown mb-8">
                 Related Articles
               </h2>
 
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="flex flex-col divide-y divide-brand-brown/10">
 
                 {relatedPosts.map((article) => (
                   <Link
                     key={article.slug}
                     href={`/blog/${article.slug}`}
-                    className="group rounded-3xl bg-white overflow-hidden shadow-sm hover:-translate-y-2 hover:shadow-xl transition"
+                    className="group py-6 flex items-center justify-between gap-6 transition"
                   >
-                    <div className="relative h-64">
-                      <Image
-                        src={article.image || "/blog-placeholder.jpg"}
-                        alt={article.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition duration-500"
-                      />
-                    </div>
-
-                    <div className="p-8">
-
+                    <div>
                       <span className="inline-flex rounded-full bg-brand-green/10 px-3 py-1 text-xs font-medium text-brand-green">
                         {article.category}
                       </span>
 
-                      <h3 className="mt-5 text-2xl font-display font-semibold text-brand-brown group-hover:text-brand-green transition">
+                      <h3 className="mt-3 text-xl font-display font-semibold text-brand-brown group-hover:text-brand-green transition">
                         {article.title}
                       </h3>
 
-                      <p className="mt-3 text-brand-brown/70 line-clamp-3">
-                        {article.excerpt}
+                      <p className="mt-2 text-sm text-brand-brown/60">
+                        {article.date}
                       </p>
-
-                      <span className="mt-6 inline-flex items-center gap-2 text-brand-green font-medium">
-                        Read Article →
-                      </span>
-
                     </div>
+
+                    <span className="shrink-0 text-brand-green font-medium opacity-0 group-hover:opacity-100 transition">
+                      Read →
+                    </span>
                   </Link>
                 ))}
 

@@ -109,7 +109,7 @@ export default function Footer() {
                 <FaFacebookF className="hover:text-brand-gold cursor-pointer" />
               </a>
 
-              <a href="https://instagram.com" target="_blank" rel="noreferrer">
+              <a href="https://www.instagram.com/tiata_investment/" target="_blank" rel="noreferrer">
                 <FaInstagram className="hover:text-brand-gold cursor-pointer" />
               </a>
 
