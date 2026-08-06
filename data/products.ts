@@ -31,8 +31,9 @@ export const products = [
       "Ready to Drink",
     ],
     sizes: [
-      "500ml",
+      "350ml",
     ],
+    
   },
 
   {
@@ -49,7 +50,7 @@ export const products = [
       "Ready to Drink",
     ],
     sizes: [
-      "500ml",
+      "500ml", "1L"
     ],
   },
 

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     }
 
     await resend.emails.send({
-      from: "Tiata Contact Form <onboarding@resend.dev>",
+      from: "Tiata Contact Form <contact@tiatamw.com>",
       to: "info@tiatamw.com",
       replyTo: email,
       subject: `New message from ${name}`,

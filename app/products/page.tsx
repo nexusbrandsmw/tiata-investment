@@ -1,11 +1,17 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import PageHeader from "@/components/PageHeader";
 import Image from "next/image";
 import { products } from "@/data/products";
-import Link from "next/link"
+import Link from "next/link";
 
-export default function AboutPage() {
+export const metadata: Metadata = {
+  title: "Our Products",
+  description:
+    "Explore Tiata Investment's range of 100% natural Malawian juices and kitchen essentials — mango, bwemba, and malambe juice, tomato sauce, and onion flakes.",
+};
+
+export default function ProductsPage() {
   return (
     <>
       <Navbar />
@@ -22,9 +28,9 @@ export default function AboutPage() {
                 Our Products
               </span>
 
-              <h2 className="mt-6 text-4xl md:text-5xl font-display font-semibold text-brand-brown">
+              <h1 className="mt-6 text-4xl md:text-5xl font-display font-semibold text-brand-brown">
                 Discover Our Product Range
-              </h2>
+              </h1>
 
               <p className="mt-5 text-lg text-brand-brown/70 leading-relaxed">
                 From refreshing fruit juices to quality kitchen essentials,
@@ -39,9 +45,9 @@ export default function AboutPage() {
 
               <div className="flex items-center gap-4 mb-10">
                 <div className="h-px flex-1 bg-brand-brown/10" />
-                <h3 className="font-body text-sm uppercase tracking-[0.25em] text-brand-green font-semibold">
+                <h2 className="font-body text-sm uppercase tracking-[0.25em] text-brand-green font-semibold">
                   Juices
-                </h3>
+                </h2>
                 <div className="h-px flex-1 bg-brand-brown/10" />
               </div>
 
@@ -65,9 +71,9 @@ export default function AboutPage() {
                         />
                       </div>
 
-                      <h4 className="text-2xl font-display font-semibold text-brand-brown">
+                      <h3 className="text-2xl font-display font-semibold text-brand-brown">
                         {product.name}
-                      </h4>
+                      </h3>
 
                       <p className="mt-4 text-brand-brown/70 leading-relaxed">
                         {product.description}
@@ -97,9 +103,9 @@ export default function AboutPage() {
 
               <div className="flex items-center gap-4 mb-10">
                 <div className="h-px flex-1 bg-brand-brown/10" />
-                <h3 className="font-body text-sm uppercase tracking-[0.25em] text-brand-green font-semibold">
+                <h2 className="font-body text-sm uppercase tracking-[0.25em] text-brand-green font-semibold">
                   Kitchen Essentials
-                </h3>
+                </h2>
                 <div className="h-px flex-1 bg-brand-brown/10" />
               </div>
 
@@ -123,9 +129,9 @@ export default function AboutPage() {
                         />
                       </div>
 
-                      <h4 className="text-2xl font-display font-semibold text-brand-brown">
+                      <h3 className="text-2xl font-display font-semibold text-brand-brown">
                         {product.name}
-                      </h4>
+                      </h3>
 
                       <p className="mt-4 text-brand-brown/70 leading-relaxed">
                         {product.description}

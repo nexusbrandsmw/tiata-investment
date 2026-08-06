@@ -71,7 +71,7 @@ export default async function Home() {
 
               <div>
                 <span className="inline-flex items-center gap-2 bg-brand-gold text-white text-sm font-medium px-4 py-2 rounded-full shadow-sm">
-                  🌿 100% Real Malawian Products
+                  100% Real Malawian Products
                 </span>
 
                 <h1 className="mt-8 font-display font-semibold leading-[1.05] text-brand-brown">
@@ -100,7 +100,7 @@ export default async function Home() {
                     href="/partner"
                     className="flex items-center justify-center gap-2 text-brand-brown px-8 py-4 font-medium border border-brand-brown rounded-full hover:text-brand-gold hover:border-brand-gold transition text-center"
                   >
-                    Invest or Partner
+                    Partner
                     <span aria-hidden>→</span>
                   </Link>
                 </div>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +10,30 @@ import { getAllPosts, getPostBySlug } from "@/lib/wordpress";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostBySlug(slug).catch(() => null);
+
+  if (!post) {
+    return { title: "Post Not Found" };
+  }
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      images: post.image ? [post.image] : undefined,
+      type: "article",
+    },
+  };
+}
 
 export default async function BlogPostPage({
   params,
@@ -84,7 +109,7 @@ export default async function BlogPostPage({
                 prose-headings:font-display
                 prose-headings:text-brand-brown
 
-                prose-p:text-brand-brown
+                prose-p:text-black
                 prose-p:leading-8
 
                 prose-strong:text-brand-brown
@@ -104,6 +129,10 @@ export default async function BlogPostPage({
                 prose-blockquote:text-brand-brown/70
 
                 [&_*]:!bg-transparent
+                [&_p]:!text-black
+                [&_p_*]:!text-black
+                [&_li]:!text-black
+                [&_li_*]:!text-black
               "
               dangerouslySetInnerHTML={{
                 __html: post.content,
@@ -127,25 +156,11 @@ export default async function BlogPostPage({
                   <Link
                     key={article.slug}
                     href={`/blog/${article.slug}`}
-                    className="group py-6 flex items-center justify-between gap-6 transition"
+                    className="group py-5"
                   >
-                    <div>
-                      <span className="inline-flex rounded-full bg-brand-green/10 px-3 py-1 text-xs font-medium text-brand-green">
-                        {article.category}
-                      </span>
-
-                      <h3 className="mt-3 text-xl font-display font-semibold text-brand-brown group-hover:text-brand-green transition">
-                        {article.title}
-                      </h3>
-
-                      <p className="mt-2 text-sm text-brand-brown/60">
-                        {article.date}
-                      </p>
-                    </div>
-
-                    <span className="shrink-0 text-brand-green font-medium opacity-0 group-hover:opacity-100 transition">
-                      Read →
-                    </span>
+                    <h3 className="text-xl font-display font-semibold text-brand-brown group-hover:text-brand-green transition">
+                      {article.title}
+                    </h3>
                   </Link>
                 ))}
 

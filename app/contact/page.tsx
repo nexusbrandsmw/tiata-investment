@@ -52,7 +52,7 @@ export default function ContactPage() {
 
           {/* LEFT INFO */}
           <div>
-            <span className="inline-flex rounded-full bg-brand-gold/20 px-4 py-2 text-sm font-medium text-brand-gold">
+            <span className="inline-flex rounded-full bg-brand-brown/20 px-4 py-2 text-sm font-medium text-brand-brown">
               Get in touch
             </span>
 

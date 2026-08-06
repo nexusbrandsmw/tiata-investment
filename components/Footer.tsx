@@ -52,8 +52,7 @@ export default function Footer() {
               Tiata Investment
             </h3>
             <p className="leading-relaxed text-white/80">
-              Pressing fresh juice from locally sourced Malawian fruit,
-              keeping value with the farmers and communities who grow it.
+              Tiata Investment is a proudly Malawian food processing company committed to producing delicious, natural and high-quality products.
             </p>
           </div>
 

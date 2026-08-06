@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
@@ -6,6 +7,12 @@ import { getAllPosts } from "@/lib/wordpress";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: "Blog",
+  description:
+    "Recipes, healthy living tips, and company news from Tiata Investment — proudly Malawian juices and kitchen essentials.",
+};
 
 const POSTS_PER_PAGE = 6;
 

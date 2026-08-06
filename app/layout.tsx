@@ -17,9 +17,18 @@ const workSans = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Tiata Investment | Real fruit, pressed close to where it grows",
+  metadataBase: new URL("https://tiatamw.com"),
+  title: {
+    default: "Tiata Investment | Real fruit, pressed close to where it grows",
+    template: "%s | Tiata Investment",
+  },
   description:
     "Tiata Investment turns mango, baobab, passion fruit, and guava from Malawian smallholder farms into juice on shelf within days of harvest.",
+  openGraph: {
+    siteName: "Tiata Investment",
+    type: "website",
+    locale: "en_MW",
+  },
 };
 
 export default function RootLayout({

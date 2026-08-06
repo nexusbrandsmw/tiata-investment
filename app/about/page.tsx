@@ -1,8 +1,14 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import PageHeader from "@/components/PageHeader";
-import {FaLeaf, FaAward, FaFlag, FaHeart,} from "react-icons/fa";
+import { FaLeaf, FaAward, FaFlag, FaHeart } from "react-icons/fa";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: "About Us",
+  description:
+    "Tiata Investment is a proudly Malawian food processing company producing natural fruit juices and kitchen essentials families across Malawi can trust.",
+};
 
 const values = [
   {
@@ -52,9 +58,9 @@ const features = [
 
 const team = [
   {
-    name: "John Banda",
-    position: "Managing Director",
-    image: "/team-1.jpg",
+    name: "Temwa Munthali",
+    position: "Founder & Managing Director",
+    image: "/team-1.jpeg",
     bio: "Leading Tiata Investment with a vision to deliver quality food products that families across Malawi can trust.",
   },
   {
