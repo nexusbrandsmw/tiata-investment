@@ -12,6 +12,7 @@ export type PostMeta = {
   category: string;
   date: string;
   excerpt: string;
+  author?: string;
 };
 
 export type BlogPost = PostMeta & {
