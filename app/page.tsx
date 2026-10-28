@@ -4,10 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaCheck, FaStar, FaLeaf, FaSeedling, FaTruck, FaAward, FaShieldAlt, FaHeart, } from "react-icons/fa";
 import { products } from "@/data/products";
-import { getAllPosts } from "@/lib/wordpress";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+import { getLatestPosts } from "@/lib/posts";
 
 /* ─── DATA ─────────────────────────────────────────────────── */
 
@@ -49,15 +46,8 @@ const productNames = products.map((product) =>
 
 /* ─── PAGE ──────────────────────────────────────────────────── */
 
-export default async function Home() {
-  // Fetch latest 3 posts from WordPress — falls back to empty array if API is unreachable
-  let latestPosts: any[] = [];
-  try {
-    const allPosts = await getAllPosts();
-    latestPosts = allPosts.slice(0, 3);
-  } catch (e) {
-    latestPosts = [];
-  }
+export default function Home() {
+  const latestPosts = getLatestPosts();
 
   return (
     <>
@@ -205,7 +195,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── FROM OUR JOURNAL — WordPress posts ────────────────── */}
+      {/* ── FROM OUR JOURNAL — Local blog posts ───────────────── */}
       <section className="bg-brand-cream py-20 lg:py-28">
         <div className="max-w-7xl mx-auto px-6">
 
