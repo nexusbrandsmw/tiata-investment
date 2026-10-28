@@ -1,15 +1,13 @@
+
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { getAllPosts } from "@/lib/wordpress";
-
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+import { getAllPosts } from "@/lib/posts";
 
 export const metadata: Metadata = {
-  title: "Blog",
+  title: "Blog | Tiata Investment",
   description:
     "Recipes, healthy living tips, and company news from Tiata Investment — proudly Malawian juices and kitchen essentials.",
 };
@@ -22,36 +20,47 @@ export default async function BlogPage({
   searchParams: Promise<{ page?: string }>;
 }) {
   const { page } = await searchParams;
-  const currentPage = Math.max(1, Number(page) || 1);
 
-  const allPosts = await getAllPosts();
+  const requestedPage = Number(page);
+  const currentPage =
+    Number.isInteger(requestedPage) && requestedPage > 0
+      ? requestedPage
+      : 1;
 
-  const totalPages = Math.max(1, Math.ceil(allPosts.length / POSTS_PER_PAGE));
+  const allPosts = getAllPosts();
+
+  const totalPages = Math.max(
+    1,
+    Math.ceil(allPosts.length / POSTS_PER_PAGE)
+  );
+
   const safePage = Math.min(currentPage, totalPages);
-
   const startIndex = (safePage - 1) * POSTS_PER_PAGE;
-  const blogPosts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+
+  const blogPosts = allPosts.slice(
+    startIndex,
+    startIndex + POSTS_PER_PAGE
+  );
 
   return (
     <>
       <Navbar />
 
       <main>
-        {/* ───────────────── BLOG ───────────────── */}
+        {/* BLOG */}
         <section className="bg-white py-20 lg:py-28">
-          <div className="max-w-7xl mx-auto px-6">
-
+          <div className="mx-auto max-w-7xl px-6">
             {/* Heading */}
-            <div className="text-center max-w-3xl mx-auto">
+            <div className="mx-auto max-w-3xl text-center">
               <span className="inline-flex rounded-full bg-brand-gold/10 px-4 py-2 text-sm font-medium text-brand-gold">
                 Latest News
               </span>
 
-              <h1 className="mt-6 text-4xl md:text-5xl font-display font-semibold text-brand-brown">
-                Stories & Updates
+              <h1 className="mt-6 font-display text-4xl font-semibold text-brand-brown md:text-5xl">
+                Stories &amp; Updates
               </h1>
 
-              <p className="mt-5 text-lg text-brand-brown/70 leading-relaxed">
+              <p className="mt-5 text-lg leading-relaxed text-brand-brown/70">
                 Discover recipes, healthy living tips, company news, and
                 everything happening at Tiata Investment.
               </p>
@@ -64,7 +73,7 @@ export default async function BlogPage({
               </p>
             ) : (
               <>
-                <div className="mt-16 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
                   {blogPosts.map((post) => (
                     <Link
                       key={post.slug}
@@ -77,16 +86,18 @@ export default async function BlogPage({
                           src={post.image}
                           alt={post.title}
                           fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                           className="object-cover transition-transform duration-700 group-hover:scale-110"
                         />
                       </div>
 
                       {/* Content */}
                       <div className="p-8">
-                        <div className="mb-5 flex items-center justify-between">
+                        <div className="mb-5 flex items-center justify-between gap-3">
                           <span className="rounded-full bg-brand-green/10 px-3 py-1 text-xs font-medium text-brand-green">
                             {post.category}
                           </span>
+
                           <span className="text-sm text-brand-brown/50">
                             {post.date}
                           </span>
@@ -102,7 +113,7 @@ export default async function BlogPage({
 
                         <div className="mt-8 inline-flex items-center gap-2 font-medium text-brand-green transition group-hover:text-brand-gold">
                           Read Article
-                          <span>→</span>
+                          <span aria-hidden="true">→</span>
                         </div>
                       </div>
                     </Link>
@@ -118,28 +129,35 @@ export default async function BlogPage({
                     {/* Previous */}
                     {safePage > 1 ? (
                       <Link
-                        href={safePage - 1 === 1 ? "/blog" : `/blog?page=${safePage - 1}`}
-                        className="inline-flex items-center justify-center rounded-full border border-brand-brown/15 w-11 h-11 text-brand-brown transition hover:border-brand-green hover:text-brand-green"
+                        href={
+                          safePage - 1 === 1
+                            ? "/blog"
+                            : `/blog?page=${safePage - 1}`
+                        }
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-brown/15 text-brand-brown transition hover:border-brand-green hover:text-brand-green"
                         aria-label="Previous page"
                       >
                         ←
                       </Link>
                     ) : (
                       <span
-                        className="inline-flex items-center justify-center rounded-full border border-brand-brown/10 w-11 h-11 text-brand-brown/30 cursor-not-allowed"
-                        aria-hidden
+                        className="inline-flex h-11 w-11 cursor-not-allowed items-center justify-center rounded-full border border-brand-brown/10 text-brand-brown/30"
+                        aria-hidden="true"
                       >
                         ←
                       </span>
                     )}
 
                     {/* Page numbers */}
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                    {Array.from(
+                      { length: totalPages },
+                      (_, index) => index + 1
+                    ).map((num) => (
                       <Link
                         key={num}
                         href={num === 1 ? "/blog" : `/blog?page=${num}`}
                         aria-current={num === safePage ? "page" : undefined}
-                        className={`inline-flex items-center justify-center rounded-full w-11 h-11 text-sm font-medium transition ${
+                        className={`inline-flex h-11 w-11 items-center justify-center rounded-full text-sm font-medium transition ${
                           num === safePage
                             ? "bg-brand-green text-white"
                             : "border border-brand-brown/15 text-brand-brown hover:border-brand-green hover:text-brand-green"
@@ -153,15 +171,15 @@ export default async function BlogPage({
                     {safePage < totalPages ? (
                       <Link
                         href={`/blog?page=${safePage + 1}`}
-                        className="inline-flex items-center justify-center rounded-full border border-brand-brown/15 w-11 h-11 text-brand-brown transition hover:border-brand-green hover:text-brand-green"
+                        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-brand-brown/15 text-brand-brown transition hover:border-brand-green hover:text-brand-green"
                         aria-label="Next page"
                       >
                         →
                       </Link>
                     ) : (
                       <span
-                        className="inline-flex items-center justify-center rounded-full border border-brand-brown/10 w-11 h-11 text-brand-brown/30 cursor-not-allowed"
-                        aria-hidden
+                        className="inline-flex h-11 w-11 cursor-not-allowed items-center justify-center rounded-full border border-brand-brown/10 text-brand-brown/30"
+                        aria-hidden="true"
                       >
                         →
                       </span>
@@ -170,7 +188,6 @@ export default async function BlogPage({
                 )}
               </>
             )}
-
           </div>
         </section>
       </main>
